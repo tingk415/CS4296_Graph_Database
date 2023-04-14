@@ -16,8 +16,8 @@ sed -i 's/#dbms.default_listen_address=0.0.0.0/dbms.default_listen_address=0.0.0
 sed -i 's/#server.default_listen_address=0.0.0.0/server.default_listen_address=0.0.0.0/g' /etc/neo4j/neo4j.conf
 
 sed -i 's/#server.http.enabled=true/server.http.enabled=true/g' /etc/neo4j/neo4j.conf
-sed -i 's/#server.http.listen_address=0.0.0.0:7474/server.http.listen_address=:7474/g' /etc/neo4j/neo4j.conf
-sed -i 's/#server.http.advertised_address=/server.http.advertised_address=:7474/g' /etc/neo4j/neo4j.conf
+sed -i 's/#server.http.listen_address=:7474/server.http.listen_address=:7474/g' /etc/neo4j/neo4j.conf
+sed -i 's/#server.http.advertised_address=:7474/server.http.advertised_address=:7474/g' /etc/neo4j/neo4j.conf
 
 sed -i 's/#dbms.connector.bolt.enabled=true/dbms.connector.bolt.enabled=true/g' /etc/neo4j/neo4j.conf
 sed -i 's/#dbms.connector.bolt.tls_level=DISABLED/dbms.connector.bolt.tls_level=DISABLED/g' /etc/neo4j/neo4j.conf
