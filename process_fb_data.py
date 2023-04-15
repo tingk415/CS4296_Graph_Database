@@ -1,12 +1,12 @@
 import csv
 
-input_file = 'raw_data/Email-EuAll.txt'
+input_file = 'raw_data/facebook_combined.txt'
 
 # Convert to format that neo4j will accept
 with open(input_file, 'r', encoding='utf-8') as infile:
-    reader = csv.reader((line for line in infile if not line.startswith('#')), delimiter='\t')
-    edges = open('neo4j_data/email-EuAll-edges.csv', 'w', newline='', encoding='utf-8')
-    nodes = open('neo4j_data/email-EuAll-nodes.csv', 'w', newline='', encoding='utf-8')
+    reader = csv.reader((line for line in infile), delimiter=' ')
+    edges = open('neo4j_data/fb-edges.csv', 'w', newline='', encoding='utf-8')
+    nodes = open('neo4j_data/fb-nodes.csv', 'w', newline='', encoding='utf-8')
 
     edges_writer = csv.writer(edges)
     nodes_writer = csv.writer(nodes)
