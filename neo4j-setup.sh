@@ -27,6 +27,11 @@ sed -i 's/#dbms.connector.bolt.advertised_address=:7687/dbms.connector.bolt.adve
 sed -i 's/#dbms.logs.http.enabled=true/dbms.logs.http.enabled=true/g' /etc/neo4j/neo4j.conf
 sed -i 's/#dbms.security.allow_csv_import_from_file_urls=true/dbms.security.allow_csv_import_from_file_urls=true/g' /etc/neo4j/neo4j.conf
 
+wget https://github.com/neo4j/graph-data-science/releases/download/2.3.2/neo4j-graph-data-science-2.3.2.jar  -P /var/lib/neo4j/plugins/
+
+echo 'dbms.security.procedures.unrestricted=gds.*' | sudo tee -a /etc/neo4j/neo4j.conf
+echo 'dbms.security.procedures.allowlist=gds.*' | sudo tee -a /etc/neo4j/neo4j.conf
+
 systemctl start neo4j >> $LOG_FILE
 
 echo "Script completed successfully" >> $LOG_FILE
