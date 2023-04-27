@@ -32,6 +32,14 @@ wget https://github.com/neo4j/graph-data-science/releases/download/2.3.2/neo4j-g
 echo 'dbms.security.procedures.unrestricted=gds.*' | sudo tee -a /etc/neo4j/neo4j.conf
 echo 'dbms.security.procedures.allowlist=gds.*' | sudo tee -a /etc/neo4j/neo4j.conf
 
+wget https://neo4jdatacs4296.s3.amazonaws.com/neo4j.dump -P /var/lib/neo4j/import
+
+neo4j-admin database load --from-path=/var/lib/neo4j/import neo4j --overwrite-destination=true
+
+neo4j-admin database migrate neo4j --force-btree-indexes-to-range
+
+chown -R neo4j:neo4j /var/lib/neo4j/data/
+
 systemctl start neo4j >> $LOG_FILE
 
 echo "Script completed successfully" >> $LOG_FILE
