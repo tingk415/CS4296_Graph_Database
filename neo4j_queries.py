@@ -2,11 +2,13 @@ from neo4j import GraphDatabase
 import time
 
 # replace the IP address of the EC2 instance being launched
-EC2_PUBLIC_IP='3.95.138.150'
+EC2_PUBLIC_IP='44.202.167.84'
 
 URI = "neo4j://"+EC2_PUBLIC_IP+":7687"
-#AUTH = ("neo4j", "CS4296NEO4J")
-AUTH = ("neo4j", "reactome")
+AUTH = ("neo4j", "CS4296NEO4J")
+#AUTH = ("neo4j", "reactome")
+
+MAX_RETRIES = 3  # maximum number of retries
 
 TIME_RECORDS=[]
 
@@ -84,18 +86,26 @@ def time_query(session,query):
     TIME_RECORDS.append(elapsed_time)
     return results
 
-
-with GraphDatabase.driver('bolt://localhost:7687', auth=AUTH) as driver:
+with GraphDatabase.driver(uri=URI, auth=AUTH, connection_timeout=100) as driver:
     driver.verify_connectivity()
     with driver.session(database="neo4j") as session:
         for query in QUERIES:
-            time_query(session,query)
+            retries = 0
+            while retries < MAX_RETRIES:
+                try:
+                    time_query(session, query)
+                    break  # exit the while loop if the function call succeeds
+                except Exception as e:
+                    print(f"Error executing query '{query}': {e}")
+                    retries += 1  # increment the number of retries
+                    if retries == MAX_RETRIES:
+                        print(f"Max retries ({MAX_RETRIES}) reached for query '{query}', skipping...")
+                        continue
 
-    del TIME_RECORDS[2]
-    del TIME_RECORDS[4]
-
-    TIME_RECORDS[3] += TIME_RECORDS.pop(2)
+    TIME_RECORDS[2] += (TIME_RECORDS.pop(3)+TIME_RECORDS.pop(4))
+    TIME_RECORDS[3] += TIME_RECORDS.pop(4)
 
     for (idx, i) in enumerate(TIME_RECORDS):
         time_str = "{:.3f}".format(i)
         print(QUERY_TYPE[idx]+':'+time_str)
+    print('Total time:'+ str(sum(TIME_RECORDS)))
